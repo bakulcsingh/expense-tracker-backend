@@ -1,0 +1,34 @@
+version: '3.8'
+
+services:
+  api:
+    build: .
+    container_name: expense-tracker-api
+    command: uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
+    volumes:
+      - .:/app
+    ports:
+      - "8000:8000"
+    depends_on:
+      - db
+    environment:
+      - POSTGRES_SERVER=db
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=TweetyBaba351
+      - POSTGRES_DB=expense_tracker
+      - SECRET_KEY=5328a35fd70364f45e9023ff3ee607190879134850f874d982bed735d727fa88
+
+  db:
+    image: postgres:14
+    container_name: expense-tracker-db
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=TweetyBaba351
+      - POSTGRES_DB=expense_tracker
+    ports:
+      - "5432:5432"
+
+volumes:
+  postgres_data:
